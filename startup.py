@@ -43,7 +43,7 @@ time.sleep(8)
 try:
     GRADIO_EXTERNAL_URL = wait_for_cloudflared_log()
     print(f"\nWeb App 已啟動，請開啟：{GRADIO_EXTERNAL_URL}")
-if GRADIO_EXTERNAL_URL:
     display(Markdown(f"### 點此開啟 Web UI：[**Gradio 入口**]({GRADIO_EXTERNAL_URL})"))
-else:
+except Exception as e:
     print("⚠️ 無法取得外部網址，請手動查看 tunnel.log")
+    print("錯誤訊息：", str(e))
