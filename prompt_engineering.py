@@ -2,9 +2,13 @@
 
 import re
 from config import PROMPT_PRESETS
+from difflib import SequenceMatcher
 
+def similar(a, b):
+    return SequenceMatcher(None, a.lower(), b.lower()).ratio() > 0.85
+    
 MIN_LENGTH = 30
-QUALITY_KEYWORDS = "masterpiece, ultra-detailed, 8k resolution, high realism"
+QUALITY_KEYWORDS = ", ".join(["masterpiece", "ultra-detailed", "8k resolution", "high realism"])
 
 def preprocess_prompt(prompt: str, style: str) -> str:
     if not prompt:
