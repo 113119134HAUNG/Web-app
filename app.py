@@ -7,7 +7,6 @@ import gradio as gr
 import torchvision
 torchvision.disable_beta_transforms_warning()
 
-from gradio_app import demo
 from config import PROMPT_PRESETS
 from inference import generate_image
 from cache_utils import clear_old_cache
