@@ -7,7 +7,7 @@ from io import BytesIO
 
 def load_comfyui_url(default="http://localhost:8188") -> str:
     try:
-        with open("comfy_url.txt", "r") as f:
+        with open("/content/Web-app/comfy_url.txt", "w") as f:
             return f.read().strip()
     except FileNotFoundError:
         return default
