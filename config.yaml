@@ -1,6 +1,6 @@
 #config.yaml
 
-model_name: stabilityai/stable-diffusion-3-medium
+safetensor_model_path: models/checkpoints/sd3-medium.safetensors
 fallback_model_name: runwayml/stable-diffusion-v1-5
 cache_dir: cache
 log_path: prompt_log.csv
@@ -127,7 +127,7 @@ prompt_presets:
     award-winning nature photography quality, National Geographic documentary level realism, perfect composition balancing foreground interest with background environment,
     8K resolution with tack-sharp details throughout
     
-  negative_prompt: >-
+negative_prompt: >-
     (worst quality:1.2), (low quality:1.2), (normal quality:1.2), (lowres:1.1), (low resolution:1.1), blurry, out of focus, depth of field, bokeh,
     pixelated, jpeg artifacts, compression artifacts, grainy, noisy, film grain, underexposed, overexposed, blown highlights, crushed blacks, over-saturation, over-sharpened,
     chromatic aberration, lens flare, lens distortion, vignette, watermark, text, caption, signature, artist name, logo, copyright symbol, branding, border, frame, padding, cropped image,
