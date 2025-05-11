@@ -24,7 +24,7 @@ def update_stats():
     return plot_prompt_usage(df), plot_time_distribution(df)
 
 def main():
-    with gr.Blocks(css="""
+    with gr.Blocks(css=""" 
         body {background-color: #f5f7fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
         .header {font-size: 2.5rem; font-weight: 700; color: #4a90e2; margin-bottom: 0.2rem;}
         .subheader {font-size: 1.1rem; color: #666; margin-bottom: 1.5rem;}
@@ -54,6 +54,12 @@ def main():
                 with gr.Row():
                     with gr.Column(scale=6):
                         with gr.Group(elem_classes="input-box"):
+                            model_select = gr.Radio(
+                                choices=["SD1.5", "SD3 (ComfyUI)"],
+                                value="SD3 (ComfyUI)",
+                                label="選擇模型",
+                                interactive=True
+                            )
                             txt_prompt = gr.Textbox(
                                 label="請輸入 Prompt",
                                 placeholder="例如：A dragon flying over mountains",
@@ -79,7 +85,7 @@ def main():
                             img = gr.Image(label="輸出圖像", interactive=False)
                             stats = gr.Textbox(label="系統訊息", interactive=False, lines=2)
 
-                def on_generate(prompt, style, width, height, seed):
+                def on_generate(prompt, style, width, height, seed, model):
                     if not prompt.strip():
                         return None, "請輸入有效的 Prompt。"
                     if width % 64 != 0 or height % 64 != 0:
@@ -88,12 +94,12 @@ def main():
                         seed_int = int(seed)
                     except Exception:
                         return None, "隨機種子必須是整數。"
-                    image, message = generate_image(prompt, style, int(width), int(height), seed_int)
+                    image, message = generate_image(prompt, style, int(width), int(height), seed_int, model)
                     return image, message
 
                 btn.click(
                     fn=on_generate,
-                    inputs=[txt_prompt, style, width, height, seed],
+                    inputs=[txt_prompt, style, width, height, seed, model_select],
                     outputs=[img, stats],
                     show_progress=True
                 )
