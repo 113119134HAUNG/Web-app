@@ -11,6 +11,9 @@ os.system("pkill -f 'python main.py' || true")
 os.system("pkill -f 'cloudflared' || true")
 os.system("pkill -f 'uvicorn' || true")
 
+# 先切換目錄
+os.chdir("/content/ComfyUI")
+
 # 啟動 ComfyUI
 subprocess.Popen([
     "python", "main.py",
@@ -21,15 +24,17 @@ subprocess.Popen([
 
 time.sleep(10)
 
+os.chdir("/content/Web-app")
+
 # 啟動 FastAPI
 subprocess.Popen([
     "uvicorn", "rest_prompt:app",
     "--host", "127.0.0.1",
     "--port", "8501",
-    "--log-level", "warning"
+    "--log-level", "debug"
 ], stdout=open("fastapi.log", "w"), stderr=subprocess.STDOUT)
 
-time.sleep(5)
+time.sleep(10)
 
 # 啟動 cloudflared
 if not os.path.exists("cloudflared"):
