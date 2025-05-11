@@ -27,6 +27,17 @@ pipe = StableDiffusionPipeline.from_pretrained(
 
 pipe.safety_checker = None
 
+NEGATIVE_PROMPT = "(worst quality:1.2), (low quality:1.2), (normal quality:1.2), (lowres:1.1), (low resolution:1.1), blurry, out of focus, depth of field, bokeh,
+    pixelated, jpeg artifacts, compression artifacts, grainy, noisy, film grain, underexposed, overexposed, blown highlights, crushed blacks, over-saturation, over-sharpened,
+    chromatic aberration, lens flare, lens distortion, vignette, watermark, text, caption, signature, artist name, logo, copyright symbol, branding, border, frame, padding, cropped image,
+    duplicate elements, repeating elements, multiple versions, bad anatomy, deformed anatomy, distorted anatomy, disfigured, malformed limbs, missing limbs, floating limbs, disconnected limbs,
+    extra limbs, mutated hands, mutilated, poorly drawn hands, poorly drawn face, poorly drawn feet, missing fingers, extra fingers, fused fingers, too many fingers, long neck, cross-eyed,
+    crossed eyes, misaligned eyes, asymmetric eyes, heterochromia, deformed iris, blurry iris, bad proportions, unnatural pose, deformed, mutated, twisted body, contorted pose, anatomical nonsense,
+    anatomically incorrect, unrealistic proportions, disproportionate body, elongated body parts, incorrect scale, cartoon, 3d render, 3d model, CGI, computer generated, digital art, painting, sketch,
+    drawing, anime, manga sketch, cartoon character, illustrated, cell-shaded, line art, flat shading, clip art, artificial, amateur, amateurish, beginner art, hobby art, unprofessional, sloppy, messy,
+    scribble, childish, AI-generated, old, outdated, strange colors, unrealistic lighting, poor composition, unrefined, simplistic, stock image, monochrome, grayscale, black and white, sepia, duotone, gaussian blur,
+    motion blur, unfocused, soft focus, haze, fog filter, glitch, corrupted image, visual artifacts, rendering errors, aliasing, moire patterns, posterization"
+
 class PromptRequest(BaseModel):
     prompt: str
     width: int = 768
@@ -77,4 +88,4 @@ async def generate_image(request: Request):
         return {"error": f"❌ 伺服器錯誤：{str(e)}"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8188)
+    uvicorn.run(app, host="127.0.0.1", port=8188)
