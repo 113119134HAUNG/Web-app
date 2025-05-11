@@ -11,7 +11,7 @@ from config import MODEL_NAME, FALLBACK_MODEL_NAME, NEGATIVE_PROMPT
 from prompt_engineering import preprocess_prompt
 from cache_utils import get_hash, get_cache_path
 from logger import log_prompt
-from generate_with_comfyui import generate_with_comfyui
+from comfy_client import generate_with_comfyui
 
 COMFY_API_URL = "http://localhost:8188"
 
