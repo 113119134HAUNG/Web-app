@@ -2,6 +2,7 @@
 
 import time
 import torch
+import requests
 
 from pathlib import Path
 from typing import Tuple
@@ -13,11 +14,15 @@ from config import MODEL_NAME, FALLBACK_MODEL_NAME, NEGATIVE_PROMPT
 from prompt_engineering import preprocess_prompt
 from cache_utils import get_hash, get_cache_path
 from logger import log_prompt
+from comfy_client import generate_with_comfyui
+
+COMFY_API_URL = "http://localhost:8188"
 
 # 主模型預先載入
-pipe = StableDiffusionPipeline.from_pretrained(
-    MODEL_NAME,
+fallback_pipe = StableDiffusionPipeline.from_pretrained(
+    FALLBACK_MODEL_NAME,
     torch_dtype=torch.float16,
+    revision="fp16",
     safety_checker=None
 ).to("cuda")
 
@@ -43,72 +48,45 @@ def add_signature(image: Image.Image, text: str) -> Image.Image:
     text_width, text_height = draw.textsize(text, font=font)
     x = image.width - text_width - 10
     y = image.height - text_height - 10
-    shadow_color = "black"
     for offset in [(1,1), (-1,-1), (1,-1), (-1,1)]:
-        draw.text((x + offset[0], y + offset[1]), text, font=font, fill=shadow_color)
+        draw.text((x + offset[0], y + offset[1]), text, font=font, fill="black")
     draw.text((x, y), text, fill="white", font=font)
     return image
 
-def generate_image(
-    prompt: str,
-    style: str,
-    width: int,
-    height: int,
-    seed: int
-) -> Tuple[Image.Image, str]:
-
+def generate_image(prompt: str, style: str, width: int, height: int, seed: int) -> Tuple[Image.Image, str]:
     start_time = time.time()
 
-    if width % 64 != 0 or height % 64 != 0:
-        raise ValueError("width 和 height 必須是 64 的倍數。")
+    full_prompt = preprocess_prompt(prompt, style)
+    generator = torch.Generator(device="cuda").manual_seed(seed)
+    img_hash = get_hash(full_prompt, style, width, height, seed)
+    cache_path = Path(get_cache_path(img_hash))
 
-    if not isinstance(seed, int):
-        raise TypeError("seed 必須是整數。")
+    if cache_path.exists():
+        image = Image.open(cache_path).convert("RGB")
+        source = "（從快取）"
+    else:
+        # 試用 ComfyUI SD3
+        image, source = generate_with_comfyui(prompt, width, height, seed, COMFY_API_URL)
 
-    try:
-        full_prompt = preprocess_prompt(prompt, style)
-        generator = torch.Generator(device="cuda").manual_seed(seed)
-        img_hash = get_hash(full_prompt, style, width, height, seed)
-        cache_path = Path(get_cache_path(img_hash))
+        # 若 ComfyUI 失敗就 fallback
+        if image is None:
+            output = fallback_pipe(
+                prompt=full_prompt,
+                negative_prompt=NEGATIVE_PROMPT,
+                width=width,
+                height=height,
+                generator=generator
+            )
+            image = output.images[0]
+            source = "（Fallback SD1.5 生圖）"
 
-        if cache_path.exists():
-            image = Image.open(cache_path).convert("RGB")
-            source = "（從快取）"
-        else:
-            try:
-                output = pipe(
-                    prompt=full_prompt,
-                    negative_prompt=NEGATIVE_PROMPT,
-                    width=width,
-                    height=height,
-                    generator=generator
-                )
-                image = output.images[0]
-                source = "（主模型生成）"
-            except Exception as e1:
-                try:
-                    fallback = get_fallback_pipe()
-                    output = fallback(
-                        prompt=full_prompt,
-                        negative_prompt=NEGATIVE_PROMPT,
-                        width=width,
-                        height=height,
-                        generator=generator
-                    )
-                    image = output.images[0]
-                    source = "（Fallback 模型生成）"
-                except Exception as e2:
-                    return None, f"生成失敗（Fallback 亦失敗）：{e2}"
+        image.save(cache_path)
 
-            image.save(cache_path)
+    image = add_signature(image, f"ID:{img_hash[:8]}")
+    log_prompt(full_prompt, style)
 
-        signature = f"ID:{img_hash[:8]}"
-        image = add_signature(image, signature)
-
-        log_prompt(full_prompt, style)
-
-        elapsed = round(time.time() - start_time, 2)
-        message = f"成功！{source} 圖像生成耗時：{elapsed} 秒"
+    elapsed = round(time.time() - start_time, 2)
+    return image, f"✅ 成功！{source} 耗時 {elapsed} 秒"
 
         return image, message
 
