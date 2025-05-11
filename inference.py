@@ -55,40 +55,38 @@ def add_signature(image: Image.Image, text: str) -> Image.Image:
 
 def generate_image(prompt: str, style: str, width: int, height: int, seed: int) -> Tuple[Image.Image, str]:
     start_time = time.time()
+    try:
+        full_prompt = preprocess_prompt(prompt, style)
+        generator = torch.Generator(device="cuda").manual_seed(seed)
+        img_hash = get_hash(full_prompt, style, width, height, seed)
+        cache_path = Path(get_cache_path(img_hash))
 
-    full_prompt = preprocess_prompt(prompt, style)
-    generator = torch.Generator(device="cuda").manual_seed(seed)
-    img_hash = get_hash(full_prompt, style, width, height, seed)
-    cache_path = Path(get_cache_path(img_hash))
+        if cache_path.exists():
+            image = Image.open(cache_path).convert("RGB")
+            source = "（從快取）"
+        else:
+            # 試用 ComfyUI SD3
+            image, source = generate_with_comfyui(prompt, width, height, seed, COMFY_API_URL)
 
-    if cache_path.exists():
-        image = Image.open(cache_path).convert("RGB")
-        source = "（從快取）"
-    else:
-        # 試用 ComfyUI SD3
-        image, source = generate_with_comfyui(prompt, width, height, seed, COMFY_API_URL)
+            # 若 ComfyUI 失敗就 fallback
+            if image is None:
+                output = fallback_pipe(
+                    prompt=full_prompt,
+                    negative_prompt=NEGATIVE_PROMPT,
+                    width=width,
+                    height=height,
+                    generator=generator
+                )
+                image = output.images[0]
+                source = "（Fallback SD1.5 生圖）"
 
-        # 若 ComfyUI 失敗就 fallback
-        if image is None:
-            output = fallback_pipe(
-                prompt=full_prompt,
-                negative_prompt=NEGATIVE_PROMPT,
-                width=width,
-                height=height,
-                generator=generator
-            )
-            image = output.images[0]
-            source = "（Fallback SD1.5 生圖）"
+            image.save(cache_path)
 
-        image.save(cache_path)
+        image = add_signature(image, f"ID:{img_hash[:8]}")
+        log_prompt(full_prompt, style)
 
-    image = add_signature(image, f"ID:{img_hash[:8]}")
-    log_prompt(full_prompt, style)
-
-    elapsed = round(time.time() - start_time, 2)
-    return image, f"✅ 成功！{source} 耗時 {elapsed} 秒"
-
-        return image, message
+        elapsed = round(time.time() - start_time, 2)
+        return image, f"✅ 成功！{source} 耗時 {elapsed} 秒"
 
     except Exception as e:
-        return None, f"生成失敗: {e}"
+        return None, f"❌ 生成失敗: {e}"
