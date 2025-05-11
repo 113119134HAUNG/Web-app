@@ -17,11 +17,11 @@ NODE_DISPLAY_NAME_MAPPINGS = {}
 # 啟動 FastAPI 應用
 app = FastAPI()
 
-MODEL_PATH = model_dir
+MODEL_PATH = "models/checkpoints/sd3-medium.safetensors"
 
 # 預載入 Stable Diffusion 3 Medium 模型
-pipe = StableDiffusionPipeline.from_pretrained(
-    MODEL_PATH,
+pipe = StableDiffusionPipeline.from_single_file(
+    pretrained_model_link_or_path=MODEL_PATH,
     torch_dtype=torch.float16,
     variant="fp16",
     use_safetensors=True
