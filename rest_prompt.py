@@ -2,6 +2,7 @@
 
 import io
 import torch
+import uvicorn
 
 from PIL import Image
 from config import MODEL_PATH
@@ -74,3 +75,6 @@ async def generate_image(request: Request):
     except Exception as e:
         print(f"[錯誤] {e}")
         return {"error": f"❌ 伺服器錯誤：{str(e)}"}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8188)
