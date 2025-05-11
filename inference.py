@@ -13,7 +13,7 @@ from cache_utils import get_hash, get_cache_path
 from logger import log_prompt
 from comfy_client import generate_with_comfyui
 
-# 預載入 SD1.5 模型
+# 預載入 SD1.5 模型（作為主模型）
 fallback_pipe = StableDiffusionPipeline.from_pretrained(
     FALLBACK_MODEL_NAME,
     torch_dtype=torch.float16,
