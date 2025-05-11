@@ -1,7 +1,10 @@
 # prompt_engineering.py
 
-from config import PROMPT_PRESETS
 import re
+from config import PROMPT_PRESETS
+
+MIN_LENGTH = 30
+QUALITY_KEYWORDS = "masterpiece, ultra-detailed, 8k resolution, high realism"
 
 def preprocess_prompt(prompt: str, style: str) -> str:
     if not prompt:
@@ -16,13 +19,10 @@ def preprocess_prompt(prompt: str, style: str) -> str:
 
     style_prompt = PROMPT_PRESETS.get(style, "").strip()
 
-    if style_prompt and style_prompt.lower() not in prompt.lower():
+    if style_prompt and not any(p.strip().lower() in prompt.lower() for p in style_prompt.split(",")):
         prompt = f"{prompt}, {style_prompt}" if prompt else style_prompt
 
-    MIN_LENGTH = 30
-    if len(prompt) < MIN_LENGTH:
-        quality_keywords = "masterpiece, ultra-detailed, 8k resolution, high realism"
-        if quality_keywords.lower() not in prompt.lower():
-            prompt += ", " + quality_keywords
+    if len(prompt) < MIN_LENGTH and QUALITY_KEYWORDS.lower() not in prompt.lower():
+        prompt += ", " + QUALITY_KEYWORDS
 
     return prompt.strip(", ").strip()
