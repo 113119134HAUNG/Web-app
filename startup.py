@@ -31,8 +31,9 @@ subprocess.Popen([
 time.sleep(5)
 
 # 啟動 cloudflared
-os.system("wget -O cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64")
-os.system("chmod +x cloudflared")
+if not os.path.exists("cloudflared"):
+    os.system("wget -O cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64")
+    os.system("chmod +x cloudflared")
 os.system("nohup ./cloudflared tunnel --url http://localhost:7860 > tunnel.log 2>&1 &")
 
 time.sleep(8)
@@ -40,7 +41,6 @@ time.sleep(8)
 # 抓取外部網址
 try:
     GRADIO_EXTERNAL_URL = wait_for_cloudflared_log()
-    print("Gradio 外部網址：", GRADIO_EXTERNAL_URL)
+    print(f"\nWeb App 已啟動，請開啟：{GRADIO_EXTERNAL_URL}")
 except Exception as e:
     print("無法取得外部網址：", str(e))
-
