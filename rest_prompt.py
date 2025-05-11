@@ -68,4 +68,4 @@ async def generate_image(request: Request):
         return {"error": f"❌ 伺服器錯誤: {str(e)}"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8188)
+    uvicorn.run(app, host="0.0.0.0", port=8501)
