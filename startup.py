@@ -3,6 +3,7 @@
 import os
 import time
 import subprocess
+from IPython.display import display, Markdown
 from cloudflared_wait import wait_for_cloudflared_log
 
 # 清除殘留進程
@@ -42,5 +43,7 @@ time.sleep(8)
 try:
     GRADIO_EXTERNAL_URL = wait_for_cloudflared_log()
     print(f"\nWeb App 已啟動，請開啟：{GRADIO_EXTERNAL_URL}")
-except Exception as e:
-    print("無法取得外部網址：", str(e))
+if GRADIO_EXTERNAL_URL:
+    display(Markdown(f"### 點此開啟 Web UI：[**Gradio 入口**]({GRADIO_EXTERNAL_URL})"))
+else:
+    print("⚠️ 無法取得外部網址，請手動查看 tunnel.log")
