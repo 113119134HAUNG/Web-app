@@ -50,7 +50,7 @@ def main():
             with gr.TabItem("🎨 生圖頁面"):
                 with gr.Row():
                     with gr.Column(scale=6):
-                        with gr.Box(elem_classes="input-box"):
+                        with gr.Group(elem_classes="input-box"):
                             txt_prompt = gr.Textbox(
                                 label="請輸入 Prompt",
                                 placeholder="例如：A dragon flying over mountains",
@@ -72,7 +72,7 @@ def main():
                             btn = gr.Button("生成圖片", variant="primary", elem_id="generate-btn")
 
                     with gr.Column(scale=6):
-                        with gr.Box(elem_classes="output-box"):
+                        with gr.Group(elem_classes="output-box"):
                             img = gr.Image(label="輸出圖像", interactive=False)
                             stats = gr.Textbox(label="系統訊息", interactive=False, lines=2)
 
