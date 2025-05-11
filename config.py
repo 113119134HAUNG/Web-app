@@ -6,7 +6,7 @@ try:
     with open("config.yaml", "r", encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
 except Exception as e:
-    raise RuntimeError(f"❌ 無法讀取 config.yaml：{e}")
+    raise RuntimeError(f"無法讀取 config.yaml：{e}")
 
 # 必要項目
 MODEL_NAME = cfg["model_name"]
