@@ -11,8 +11,10 @@ from diffusers import StableDiffusionPipeline
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
 
+# 啟動 FastAPI 應用
 app = FastAPI()
 
+# 預載入 Stable Diffusion 3 Medium 模型
 pipe = StableDiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-3-medium",
     torch_dtype=torch.float16,
@@ -32,10 +34,18 @@ class PromptRequest(BaseModel):
 async def generate_image(request: Request):
     try:
         data = await request.json()
-        prompt = data.get("prompt", "")
-        width = data.get("width", 768)
-        height = data.get("height", 768)
-        seed = data.get("seed", 42)
+        prompt = data.get("prompt", "").strip()
+        width = int(data.get("width", 768))
+        height = int(data.get("height", 768))
+        seed = int(data.get("seed", 42))
+
+        if width > 2048 or height > 2048:
+            return {"error": "❌ 圖片尺寸過大（最大 2048x2048）"}
+
+        if not prompt:
+            return {"error": "❌ 請提供有效的 prompt 內容"}
+
+        print(f"[請求] Prompt: {prompt} | Size: {width}x{height} | Seed: {seed}")
 
         generator = torch.Generator("cuda").manual_seed(seed)
 
@@ -53,7 +63,11 @@ async def generate_image(request: Request):
         image.save(image_bytes, format="PNG")
         image_bytes.seek(0)
 
+        del result
+        torch.cuda.empty_cache()
+
         return Response(content=image_bytes.read(), media_type="image/png")
 
     except Exception as e:
-        return {"error": str(e)}
+        print(f"[錯誤] {e}")
+        return {"error": f"❌ 伺服器錯誤：{str(e)}"}
