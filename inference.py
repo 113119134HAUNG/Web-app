@@ -7,11 +7,19 @@ from typing import Tuple
 from PIL import Image, ImageDraw, ImageFont
 from diffusers import StableDiffusionPipeline
 
-from config import FALLBACK_MODEL_NAME, NEGATIVE_PROMPT, DEFAULT_WIDTH, DEFAULT_HEIGHT
+from config import MODEL_PATH,FALLBACK_MODEL_NAME, NEGATIVE_PROMPT, DEFAULT_WIDTH, DEFAULT_HEIGHT
 from prompt_engineering import preprocess_prompt
 from cache_utils import get_hash, get_cache_path
 from logger import log_prompt
 from comfy_client import generate_with_comfyui
+
+# 預載入 SD3.0 模型
+pipe = StableDiffusionPipeline.from_single_file(
+    pretrained_model_link_or_path=MODEL_PATH,
+    torch_dtype=torch.float16,
+    variant="fp16",
+    safety_checker=None,
+).to("cuda")
 
 # 預載入 SD1.5 模型
 fallback_pipe = StableDiffusionPipeline.from_pretrained(
