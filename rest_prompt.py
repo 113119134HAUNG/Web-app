@@ -51,6 +51,7 @@ async def generate_image(request: Request):
 
         result = pipe(
             prompt=prompt,
+            negative_prompt=NEGATIVE_PROMPT,
             width=width,
             height=height,
             guidance_scale=7.5,
