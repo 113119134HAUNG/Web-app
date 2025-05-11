@@ -17,6 +17,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {}
 # 啟動 FastAPI 應用
 app = FastAPI()
 
+MODEL_PATH = model_dir
+
 # 預載入 Stable Diffusion 3 Medium 模型
 pipe = StableDiffusionPipeline.from_pretrained(
     MODEL_PATH,
