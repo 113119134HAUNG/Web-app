@@ -19,7 +19,7 @@ def wait_for_cloudflared_log(log_path="tunnel.log", max_wait_seconds=60):
         if urls:
             comfy_url = urls[-1]
             print("ComfyUI 外部網址：", comfy_url)
-            with open("comfy_url.txt", "w") as f:
+            with open("/content/Web-app/comfy_url.txt", "w") as f:
                 f.write(comfy_url)
             break
 
