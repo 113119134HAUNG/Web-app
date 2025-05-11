@@ -92,7 +92,7 @@ def ui_infer(prompt, model):
     return generate_image(prompt, style, width, height, seed)
 
 with gr.Blocks() as demo:
-    gr.Markdown("## 🎨 Stable Diffusion App (SD1.5 / SD3 via ComfyUI)")
+    gr.Markdown("## Stable Diffusion App (SD1.5 / SD3 via ComfyUI)")
     with gr.Row():
         model_choice = gr.Radio(["SD1.5", "SD3 (ComfyUI)"], label="Select Model", value="SD1.5")
     prompt_input = gr.Textbox(label="Prompt")
