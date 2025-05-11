@@ -20,16 +20,13 @@ pipe = StableDiffusionPipeline.from_pretrained(
     use_safetensors=True
 ).to("cuda")
 
-# 關閉安全過濾器
 pipe.safety_checker = None
-
 
 class PromptRequest(BaseModel):
     prompt: str
     width: int = 768
     height: int = 768
     seed: int = 42
-
 
 @app.post("/prompt")
 async def generate_image(request: Request):
