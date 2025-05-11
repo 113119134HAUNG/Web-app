@@ -9,15 +9,17 @@ from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from starlette.responses import Response
 from diffusers import StableDiffusionPipeline
-from config import MODEL_PATH, NEGATIVE_PROMPT, DEFAULT_WIDTH, DEFAULT_HEIGHT
+from config import (
+    MODEL_PATH, CACHE_DIR,
+    NEGATIVE_PROMPT, DEFAULT_WIDTH, DEFAULT_HEIGHT
+)
 
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
 
-# 啟動 FastAPI 應用
 app = FastAPI()
 
-# 預載入 Stable Diffusion 3 Medium 模型
+# 初始化模型
 pipe = StableDiffusionPipeline.from_pretrained(
     MODEL_PATH,
     torch_dtype=torch.float16,
@@ -28,10 +30,18 @@ pipe = StableDiffusionPipeline.from_pretrained(
 
 pipe.safety_checker = None
 
+# 輔助函式：安全取得寬高，防止異常與過大尺寸
+def get_safe_dim(value, default):
+    try:
+        value = int(value)
+        return max(64, min(value, 2048))  # 限制 64 ~ 2048
+    except Exception:
+        return default
+
 class PromptRequest(BaseModel):
     prompt: str
-    width: int = 768
-    height: int = 768
+    width: int = DEFAULT_WIDTH
+    height: int = DEFAULT_HEIGHT
     seed: int = 42
 
 @app.post("/prompt")
@@ -39,12 +49,9 @@ async def generate_image(request: Request):
     try:
         data = await request.json()
         prompt = data.get("prompt", "").strip()
-        width = int(data.get("width", 768))
-        height = int(data.get("height", 768))
+        width = get_safe_dim(data.get("width", DEFAULT_WIDTH), DEFAULT_WIDTH)
+        height = get_safe_dim(data.get("height", DEFAULT_HEIGHT), DEFAULT_HEIGHT)
         seed = int(data.get("seed", 42))
-
-        if width > 2048 or height > 2048:
-            return {"error": "❌ 圖片尺寸過大（最大 2048x2048）"}
 
         if not prompt:
             return {"error": "❌ 請提供有效的 prompt 內容"}
@@ -78,4 +85,4 @@ async def generate_image(request: Request):
         return {"error": f"❌ 伺服器錯誤：{str(e)}"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8188)
+    uvicorn.run(app, host="0.0.0.0", port=8188)
