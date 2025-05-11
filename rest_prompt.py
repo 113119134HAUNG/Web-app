@@ -5,7 +5,6 @@ import torch
 import uvicorn
 
 from PIL import Image
-from config import MODEL_PATH
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from starlette.responses import Response
