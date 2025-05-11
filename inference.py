@@ -7,13 +7,16 @@ from typing import Tuple
 from PIL import Image, ImageDraw, ImageFont
 from diffusers import StableDiffusionPipeline
 
-from config import MODEL_PATH,FALLBACK_MODEL_NAME, NEGATIVE_PROMPT, DEFAULT_WIDTH, DEFAULT_HEIGHT
+from config import MODEL_PATH, FALLBACK_MODEL_NAME, NEGATIVE_PROMPT, DEFAULT_WIDTH, DEFAULT_HEIGHT
 from prompt_engineering import preprocess_prompt
 from cache_utils import get_hash, get_cache_path
 from logger import log_prompt
 from comfy_client import generate_with_comfyui
 
-# 預載入 SD3.0 模型
+# 解析模型路徑（支援本地路徑）
+MODEL_PATH = str(Path(MODEL_PATH).resolve())
+
+# 預載入 SD3.0 safetensors 模型
 pipe = StableDiffusionPipeline.from_single_file(
     pretrained_model_link_or_path=MODEL_PATH,
     torch_dtype=torch.float16,
@@ -27,16 +30,6 @@ fallback_pipe = StableDiffusionPipeline.from_pretrained(
     torch_dtype=torch.float16,
     safety_checker=None
 ).to("cuda")
-
-def get_fallback_pipe():
-    global fallback_pipe
-    if fallback_pipe is None:
-        fallback_pipe = StableDiffusionPipeline.from_pretrained(
-            FALLBACK_MODEL_NAME,
-            torch_dtype=torch.float16,
-            safety_checker=None
-        ).to("cuda")
-    return fallback_pipe
 
 def add_signature(image: Image.Image, text: str) -> Image.Image:
     draw = ImageDraw.Draw(image)
@@ -105,7 +98,7 @@ def ui_infer(prompt, model):
     return generate_image(prompt, style, width, height, seed, model)
 
 with gr.Blocks() as demo:
-    gr.Markdown("## 🎨 Stable Diffusion App（SD1.5 / SD3 via ComfyUI）")
+    gr.Markdown("## Stable Diffusion App【SD1.5 / SD3 via ComfyUI】")
 
     with gr.Row():
         model_choice = gr.Radio(["SD1.5", "SD3 (ComfyUI)"], label="選擇模型", value="SD1.5")
