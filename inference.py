@@ -7,7 +7,7 @@ from typing import Tuple
 from PIL import Image, ImageDraw, ImageFont
 from diffusers import StableDiffusionPipeline
 
-from config import MODEL_NAME, FALLBACK_MODEL_NAME, NEGATIVE_PROMPT
+from config import FALLBACK_MODEL_NAME, NEGATIVE_PROMPT
 from prompt_engineering import preprocess_prompt
 from cache_utils import get_hash, get_cache_path
 from logger import log_prompt
@@ -15,7 +15,7 @@ from comfy_client import generate_with_comfyui
 
 COMFY_API_URL = "http://localhost:8188"
 
-# fallback 模型（SD1.5）預載入
+# 預載入 SD1.5 模型
 fallback_pipe = StableDiffusionPipeline.from_pretrained(
     FALLBACK_MODEL_NAME,
     torch_dtype=torch.float16,
@@ -47,7 +47,7 @@ def add_signature(image: Image.Image, text: str) -> Image.Image:
     draw.text((x, y), text, fill="white", font=font)
     return image
 
-def generate_image(prompt: str, style: str, width: int, height: int, seed: int) -> Tuple[Image.Image, str]:
+def generate_image(prompt: str, style: str, width: int, height: int, seed: int, model: str = "SD1.5") -> Tuple[Image.Image, str]:
     start_time = time.time()
     try:
         full_prompt = preprocess_prompt(prompt, style)
@@ -59,8 +59,11 @@ def generate_image(prompt: str, style: str, width: int, height: int, seed: int) 
             image = Image.open(cache_path).convert("RGB")
             source = "(from cache)"
         else:
-            image, source = generate_with_comfyui(full_prompt, width, height, seed, COMFY_API_URL)
-            if image is None:
+            if model == "SD3 (ComfyUI)":
+                image, source = generate_with_comfyui(full_prompt, width, height, seed, COMFY_API_URL)
+                if image is None:
+                    model = "SD1.5"  # fallback
+            if model == "SD1.5":
                 output = fallback_pipe(
                     prompt=full_prompt,
                     negative_prompt=NEGATIVE_PROMPT,
@@ -76,10 +79,10 @@ def generate_image(prompt: str, style: str, width: int, height: int, seed: int) 
         log_prompt(full_prompt, style)
 
         elapsed = round(time.time() - start_time, 2)
-        return image, f"Success {source}, Time: {elapsed}s"
+        return image, f"{source} - {elapsed}s"
 
     except Exception as e:
-        return None, f"Failed to generate: {e}"
+        return None, f"Failed: {e}"
 
 # gradio_app.py
 
@@ -89,7 +92,7 @@ from inference import generate_image
 def ui_infer(prompt, model):
     style = "default"
     width, height, seed = 512, 512, 42
-    return generate_image(prompt, style, width, height, seed)
+    return generate_image(prompt, style, width, height, seed, model)
 
 with gr.Blocks() as demo:
     gr.Markdown("## Stable Diffusion App (SD1.5 / SD3 via ComfyUI)")
