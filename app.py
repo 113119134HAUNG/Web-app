@@ -4,6 +4,9 @@ import os
 os.makedirs("cache", exist_ok=True)
 
 import gradio as gr
+import torchvision
+torchvision.disable_beta_transforms_warning()
+
 from config import PROMPT_PRESETS
 from inference import generate_image
 from cache_utils import clear_old_cache
