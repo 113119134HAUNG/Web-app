@@ -2,9 +2,11 @@
 
 import io
 import torch
+
 from PIL import Image
-from fastapi import FastAPI, Request
+from config import MODEL_PATH
 from pydantic import BaseModel
+from fastapi import FastAPI, Request
 from starlette.responses import Response
 from diffusers import StableDiffusionPipeline
 
@@ -16,7 +18,7 @@ app = FastAPI()
 
 # 預載入 Stable Diffusion 3 Medium 模型
 pipe = StableDiffusionPipeline.from_pretrained(
-    "stabilityai/stable-diffusion-3-medium",
+    MODEL_PATH,
     torch_dtype=torch.float16,
     variant="fp16",
     use_safetensors=True
