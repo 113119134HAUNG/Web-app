@@ -1,5 +1,7 @@
 # cache_utils.py
 
+import os
+import time
 import hashlib
 from pathlib import Path
 from config import CACHE_DIR
@@ -22,3 +24,10 @@ def get_cache_path(hash_key: str) -> Path:
     ensure_cache_dir_exists()
     return cache_dir / f"{hash_key}.png"
 
+def clear_old_cache(days: int = 7):
+    cutoff = time.time() - (days * 86400)
+    for file in os.listdir(CACHE_DIR):
+        fpath = os.path.join(CACHE_DIR, file)
+        if file.endswith(".png") and os.path.isfile(fpath):
+            if os.path.getmtime(fpath) < cutoff:
+                os.remove(fpath)
