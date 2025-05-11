@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from starlette.responses import Response
 from diffusers import StableDiffusionPipeline
+from config import MODEL_PATH, NEGATIVE_PROMPT, DEFAULT_WIDTH, DEFAULT_HEIGHT
 
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
@@ -27,17 +28,6 @@ pipe = StableDiffusionPipeline.from_single_file(
 ).to("cuda")
 
 pipe.safety_checker = None
-
-NEGATIVE_PROMPT = '''(worst quality:1.2), (low quality:1.2), (normal quality:1.2), (lowres:1.1), (low resolution:1.1), blurry, out of focus, depth of field, bokeh,
-    pixelated, jpeg artifacts, compression artifacts, grainy, noisy, film grain, underexposed, overexposed, blown highlights, crushed blacks, over-saturation, over-sharpened,
-    chromatic aberration, lens flare, lens distortion, vignette, watermark, text, caption, signature, artist name, logo, copyright symbol, branding, border, frame, padding, cropped image,
-    duplicate elements, repeating elements, multiple versions, bad anatomy, deformed anatomy, distorted anatomy, disfigured, malformed limbs, missing limbs, floating limbs, disconnected limbs,
-    extra limbs, mutated hands, mutilated, poorly drawn hands, poorly drawn face, poorly drawn feet, missing fingers, extra fingers, fused fingers, too many fingers, long neck, cross-eyed,
-    crossed eyes, misaligned eyes, asymmetric eyes, heterochromia, deformed iris, blurry iris, bad proportions, unnatural pose, deformed, mutated, twisted body, contorted pose, anatomical nonsense,
-    anatomically incorrect, unrealistic proportions, disproportionate body, elongated body parts, incorrect scale, cartoon, 3d render, 3d model, CGI, computer generated, digital art, painting, sketch,
-    drawing, anime, manga sketch, cartoon character, illustrated, cell-shaded, line art, flat shading, clip art, artificial, amateur, amateurish, beginner art, hobby art, unprofessional, sloppy, messy,
-    scribble, childish, AI-generated, old, outdated, strange colors, unrealistic lighting, poor composition, unrefined, simplistic, stock image, monochrome, grayscale, black and white, sepia, duotone, gaussian blur,
-    motion blur, unfocused, soft focus, haze, fog filter, glitch, corrupted image, visual artifacts, rendering errors, aliasing, moire patterns, posterization'''
 
 class PromptRequest(BaseModel):
     prompt: str
