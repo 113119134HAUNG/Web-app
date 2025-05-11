@@ -1,7 +1,14 @@
-torch>=2.0
+torch==2.7.0
+torchvision==0.22.0
+torchaudio==2.7.0
 diffusers>=0.24.0
 transformers>=4.38
 accelerate>=0.27.2
 gradio>=4.16.0
 pillow
 pyyaml
+einops
+requests
+matplotlib
+fastapi
+uvicorn
