@@ -20,10 +20,11 @@ handler = RotatingFileHandler(
 
 formatter = logging.Formatter('%(asctime)s,%(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 handler.setFormatter(formatter)
-logger.addHandler(handler)
+
+if not logger.handlers:
+    logger.addHandler(handler)
 
 def log_prompt(prompt: str, style: str) -> None:
-
     try:
         clean_prompt = prompt.replace('\n', ' ').replace('\r', ' ').strip()
         clean_style = style.replace('\n', ' ').replace('\r', ' ').strip()
