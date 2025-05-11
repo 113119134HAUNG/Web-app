@@ -2,8 +2,11 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
 import os
 from config import PROMPT_LOG_PATH
+
+matplotlib.rcParams['font.family'] = 'Noto Sans CJK TC'  # 可替換成 'Taipei Sans TC Beta', 'Microsoft JhengHei' 等系統字型
 
 def load_log_df():
     if not os.path.exists(PROMPT_LOG_PATH):
@@ -36,6 +39,8 @@ def plot_time_distribution(df):
             raise ValueError("無時間資料")
         df["time"] = pd.to_datetime(df["time"], errors="coerce")
         df = df.dropna(subset=["time"])
+        if df.empty:
+            raise ValueError("無有效時間紀錄")
         df["hour"] = df["time"].dt.hour
         fig, ax = plt.subplots()
         df["hour"].value_counts().sort_index().plot(kind="bar", ax=ax, title="按小時使用分佈", color="orange")
