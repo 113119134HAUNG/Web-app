@@ -43,11 +43,18 @@ def add_signature(image: Image.Image, text: str) -> Image.Image:
         font = ImageFont.truetype("arial.ttf", font_size)
     except IOError:
         font = ImageFont.load_default()
-    text_width, text_height = draw.textsize(text, font=font)
+
+    # ✅ 用 textbbox 取代已棄用的 textsize
+    bbox = draw.textbbox((0, 0), text, font=font)
+    text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
+
     x = image.width - text_width - 10
     y = image.height - text_height - 10
-    for offset in [(1,1), (-1,-1), (1,-1), (-1,1)]:
+
+    for offset in [(1, 1), (-1, -1), (1, -1), (-1, 1)]:
         draw.text((x + offset[0], y + offset[1]), text, font=font, fill="black")
+
     draw.text((x, y), text, fill="white", font=font)
     return image
 
