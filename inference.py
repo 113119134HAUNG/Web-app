@@ -22,7 +22,6 @@ COMFY_API_URL = "http://localhost:8188"
 fallback_pipe = StableDiffusionPipeline.from_pretrained(
     FALLBACK_MODEL_NAME,
     torch_dtype=torch.float16,
-    revision="fp16",
     safety_checker=None
 ).to("cuda")
 
@@ -33,7 +32,6 @@ def get_fallback_pipe():
         fallback_pipe = StableDiffusionPipeline.from_pretrained(
             FALLBACK_MODEL_NAME,
             torch_dtype=torch.float16,
-            revision="fp16",
             safety_checker=None
         ).to("cuda")
     return fallback_pipe
