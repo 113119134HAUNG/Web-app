@@ -3,38 +3,26 @@
 import io
 import torch
 import uvicorn
+import requests
 
 from PIL import Image
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from starlette.responses import Response
-from diffusers import StableDiffusionPipeline
 from config import (
-    MODEL_PATH, CACHE_DIR,
-    NEGATIVE_PROMPT, DEFAULT_WIDTH, DEFAULT_HEIGHT
+    DEFAULT_WIDTH, DEFAULT_HEIGHT,
+    NEGATIVE_PROMPT, CACHE_DIR
 )
 
-NODE_CLASS_MAPPINGS = {}
-NODE_DISPLAY_NAME_MAPPINGS = {}
+COMFY_API_URL = "http://localhost:8188"
 
 app = FastAPI()
-
-# 初始化模型
-pipe = StableDiffusionPipeline.from_pretrained(
-    MODEL_PATH,
-    torch_dtype=torch.float16,
-    variant="fp16",
-    use_safetensors=True,
-    cache_dir=CACHE_DIR
-).to("cuda")
-
-pipe.safety_checker = None
 
 # 輔助函式：安全取得寬高，防止異常與過大尺寸
 def get_safe_dim(value, default):
     try:
         value = int(value)
-        return max(64, min(value, 2048))  # 限制 64 ~ 2048
+        return max(64, min(value, 2048))
     except Exception:
         return default
 
@@ -58,31 +46,26 @@ async def generate_image(request: Request):
 
         print(f"[請求] Prompt: {prompt} | Size: {width}x{height} | Seed: {seed}")
 
-        generator = torch.Generator("cuda").manual_seed(seed)
+        # 準備 ComfyUI 請求 payload
+        payload = {
+            "prompt": prompt,
+            "negative_prompt": NEGATIVE_PROMPT,
+            "width": width,
+            "height": height,
+            "seed": seed
+        }
 
-        result = pipe(
-            prompt=prompt,
-            negative_prompt=NEGATIVE_PROMPT,
-            width=width,
-            height=height,
-            guidance_scale=7.5,
-            generator=generator,
-            num_inference_steps=30
-        )
+        # 呼叫 ComfyUI REST API
+        res = requests.post(f"{COMFY_API_URL}/prompt", json=payload)
+        if res.status_code != 200:
+            return {"error": f"❌ ComfyUI 連線失敗 ({res.status_code})"}
 
-        image = result.images[0]
-        image_bytes = io.BytesIO()
-        image.save(image_bytes, format="PNG")
-        image_bytes.seek(0)
-
-        del result
-        torch.cuda.empty_cache()
-
+        image_bytes = io.BytesIO(res.content)
         return Response(content=image_bytes.read(), media_type="image/png")
 
     except Exception as e:
         print(f"[錯誤] {e}")
-        return {"error": f"❌ 伺服器錯誤：{str(e)}"}
+        return {"error": f"❌ 伺服器錯誤: {str(e)}"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8188)
