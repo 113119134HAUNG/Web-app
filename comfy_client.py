@@ -6,7 +6,7 @@ from PIL import Image
 from io import BytesIO
 from pathlib import Path
 
-def load_comfyui_url(default: str = "http://localhost:8188") -> str:
+def load_comfyui_url(default: str = "http://127.0.0.1:8501") -> str:
     url_path = Path("/content/Web-app/comfy_url.txt")
     if url_path.exists():
         try:
