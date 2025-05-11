@@ -7,7 +7,7 @@ log_path: prompt_log.csv
 default_width: 768
 default_height: 768
 prompt_presets:
-  Portrait:
+  Portrait: >-
     Ultra-realistic cinematic portrait of a beautiful woman,
     sharp focus using Zeiss Otus lens,
     dramatic chiaroscuro lighting with perfect Rembrandt triangle,
@@ -25,8 +25,7 @@ prompt_presets:
     captured with Phase One medium format camera,
     perfect facial symmetry with ideal proportion,
     gallery lighting, archival print quality
-
-  Landscape:
+  Landscape: >-
     Epic panoramic fantasy landscape at magic hour,
     breathtaking hyper-detailed scenery with colossal snow-capped mountains,
     crystal-clear serene lake perfectly reflecting the prismatic sky,
@@ -39,8 +38,7 @@ prompt_presets:
     Thomas Cole, Greg Rutkowski and Ivan Aivazovsky, digital oil painting technique,
     16K resolution with microscopic details, cinematic 21:9 aspect ratio, perfect HDR rendering with 16-bit color depth,
     exhibition quality
-
- Anime:
+  Anime: >-
     Ultra-detailed professional anime illustration of a beautiful girl standing in a vast field of meticulously rendered cherry blossoms,
     perfect dynamic composition following golden spiral ratio, delicate pastel color palette with carefully balanced pink and cyan accents,
     physically accurate flowing hair with thousands of individual strands catching light,
@@ -51,8 +49,7 @@ prompt_presets:
     expert cell-shaded style with subtle gradient shading, collaborative masterpiece inspired by Makoto Shinkai, Studio Ghibli,
     Miyazaki and Kyoto Animation, museum quality artwork, 8K resolution with perfect anti-aliasing,
     currently trending #1 on Pixiv rankings, perfect studio lighting setup with complementary rim lighting
-
- Sci-Fi:
+  Sci-Fi: >-
     Hyper-detailed futuristic megacity at night, massive interconnected crystalline skyscrapers reaching stratospheric heights,
     advanced cybernetic infrastructure enhancements on neo-brutalist architecture,
     carefully placed glowing blue and purple neon lights outlining geometric structures,
@@ -62,8 +59,7 @@ prompt_presets:
     physically accurate glossy rain-slicked streets creating perfect mirror reflections, cinematic IMAX widescreen composition with leading lines,
     professional concept art worthy of production design award, advanced ray-traced global illumination lighting,
     volumetric atmospheric perspective with distance haze, artwork by Syd Mead and Stephan Martiniere
-
-Cyberpunk:
+  Cyberpunk: >-
     Photorealistic cyberpunk street scene in detailed Neo-Tokyo district,
     beautiful female android with illuminated synthetic eyes and intricately visible circuitry beneath translucent skin,
     heavy persistent rain environment creating deep reflective puddles,
@@ -76,7 +72,7 @@ Cyberpunk:
     technical high contrast ratio with controlled lighting, carefully selected vibrant color palette with complementary hues,
     directly inspired by Ghost in the Shell, Blade Runner 2049 and Cyberpunk 2077,
     photorealistic hyperdetailed rendering with global illumination
-Fantasy Character:
+  Fantasy Character: >-
     Heroic fantasy character portrait, legendary elven archer with ancient ornate armor,
     intricate facial features showing centuries of wisdom, masterfully crafted recurve bow with magical runes,
     enchanted forest background with bioluminescent elements, ethereal magical particles surrounding figure,
@@ -85,7 +81,7 @@ Fantasy Character:
     ultra-detailed equipment showing wear and craftsmanship, professional character concept art,
     inspired by Donato Giancola and Todd Lockwood, perfect composition with artistic focus, 8K resolution,
     studio quality rendering, award-winning digital painting, portfolio centerpiece quality
-Wildlife:
+  Wildlife: >-
     Breathtaking ultra-detailed wildlife photography of majestic tiger in natural habitat, perfect freezing of dynamic motion,
     morning golden light filtering through jungle canopy, razor-sharp focus on piercing eyes with catchlights,
     individual fur strands visible with perfect definition, natural environment with photorealistic foliage,
@@ -94,7 +90,7 @@ Wildlife:
     atmospheric jungle mist creating depth, perfect exposure settings capturing full dynamic range, true-to-life color accuracy,
     award-winning nature photography by Art Wolfe and Frans Lanting, precise behavioral moment captured, museum exhibition quality,
     8K resolution, cinematic color grading
-Dark Fantasy:
+  Dark Fantasy: >-
     Hauntingly beautiful dark fantasy scene, ancient crumbling gothic cathedral consumed by supernatural corruption,
     towering twisted architecture with impossible geometries, malevolent entity partially obscured in shadows with only glowing eyes visible,
     decaying ornate details with grotesque gargoyles, moonlight streaming through shattered stained glass creating prismatic lighting effects,
@@ -103,7 +99,7 @@ Dark Fantasy:
     dramatic chiaroscuro lighting creating psychological tension, inspired by Zdzisław Beksiński and H.R. Giger, professional concept art quality,
     photorealistic rendering with perfect perspective, 8K resolution with microscopic textures, cinematic horror composition,
     gallery-worthy digital painting
-Abstract:
+  Abstract: >-
     Stunning abstract digital artwork, fluid dynamic shapes with perfect mathematical harmony,
     vibrant complementary color scheme with professional color theory application,
     intricate fractal patterns emerging from chaos, multiple layers of transparency and depth,
@@ -112,7 +108,7 @@ Abstract:
     emotional evocation through color psychology, inspired by pioneering digital artists and generative art techniques, exhibition quality with pristine rendering,
     8K resolution with perfect anti-aliasing, sophisticated artistic statement, gallery presentation quality,
     award-winning abstract design, perfect technical execution with artistic soul, harmonious visual symphony
-Steampunk:
+  Steampunk: >-
     Elaborate steampunk mechanical laboratory, Victorian-era scientist with brass goggles and intricate period-accurate clothing,
     massive Tesla-inspired electrical apparatus with arcing electricity between copper coils,
     fully-functional brass and copper machinery with visible gears and mechanical operations,
@@ -121,7 +117,7 @@ Steampunk:
     photorealistic textures on all materials showing appropriate wear and patina, historically accurate architectural details with modern fantastical elements,
     rich color palette of browns, golds and deep reds, atmospheric dust particles visible in light beams, inspired by Jules Verne and H.G. Wells aesthetic,
     professional concept art quality, 8K resolution with perfect period details, museum exhibition quality illustration
-Underwater:
+  Underwater: >-
     Breathtaking underwater photography of vibrant coral reef ecosystem, crystal clear turquoise water with realistic caustic light effects,
     diverse coral formations with scientific accuracy and thousands of individual polyps, schools of tropical fish with iridescent scales and perfect anatomy,
     streaming sunlight creating volumetric god rays through water, subtle underwater particulate matter creating depth,
@@ -130,7 +126,9 @@ Underwater:
     shot with specialized underwater housing for Canon 5D Mark IV, 16-35mm wide angle lens with perfect rectilinear correction,
     award-winning nature photography quality, National Geographic documentary level realism, perfect composition balancing foreground interest with background environment,
     8K resolution with tack-sharp details throughout
-negative_prompt: (worst quality:1.2), (low quality:1.2), (normal quality:1.2), (lowres:1.1), (low resolution:1.1), blurry, out of focus, depth of field, bokeh,
+    
+  negative_prompt: >-
+    (worst quality:1.2), (low quality:1.2), (normal quality:1.2), (lowres:1.1), (low resolution:1.1), blurry, out of focus, depth of field, bokeh,
     pixelated, jpeg artifacts, compression artifacts, grainy, noisy, film grain, underexposed, overexposed, blown highlights, crushed blacks, over-saturation, over-sharpened,
     chromatic aberration, lens flare, lens distortion, vignette, watermark, text, caption, signature, artist name, logo, copyright symbol, branding, border, frame, padding, cropped image,
     duplicate elements, repeating elements, multiple versions, bad anatomy, deformed anatomy, distorted anatomy, disfigured, malformed limbs, missing limbs, floating limbs, disconnected limbs,
