@@ -28,6 +28,6 @@ def log_prompt(prompt: str, style: str) -> None:
     try:
         clean_prompt = prompt.replace('\n', ' ').replace('\r', ' ').strip()
         clean_style = style.replace('\n', ' ').replace('\r', ' ').strip()
-        logger.info(f"{clean_prompt},{clean_style}")
+        logger.info(f"{clean_prompt},{clean_style},{model}")
     except Exception as e:
         print(f"[Warning] 無法寫入日誌: {e}")
