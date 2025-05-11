@@ -6,6 +6,9 @@ from inference import generate_image
 from cache_utils import clear_old_cache
 from stats import load_log_df, plot_prompt_usage, plot_time_distribution
 
+import os
+os.makedirs("cache", exist_ok=True)
+
 clear_old_cache(days=7)
 
 def update_stats():
