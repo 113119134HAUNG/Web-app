@@ -4,13 +4,16 @@ import io
 import requests
 from PIL import Image
 from io import BytesIO
+from pathlib import Path
 
-def load_comfyui_url(default="http://localhost:8188") -> str:
-    try:
-        with open("/content/Web-app/comfy_url.txt", "w") as f:
-            return f.read().strip()
-    except FileNotFoundError:
-        return default
+def load_comfyui_url(default: str = "http://localhost:8188") -> str:
+    url_path = Path("/content/Web-app/comfy_url.txt")
+    if url_path.exists():
+        try:
+            return url_path.read_text(encoding="utf-8").strip()
+        except Exception as e:
+            print(f"⚠️ 無法讀取 comfy_url.txt，使用預設網址: {e}")
+    return default
 
 def generate_with_comfyui(prompt: str, width: int = 512, height: int = 512, seed: int = 42) -> tuple:
     comfy_api_url = load_comfyui_url()
@@ -29,10 +32,10 @@ def generate_with_comfyui(prompt: str, width: int = 512, height: int = 512, seed
         return image, "成功使用主模型 ComfyUI (SD3)"
 
     except requests.exceptions.Timeout:
-        return None, "請求逾時（ComfyUI 未回應）"
+        return None, "請求逾時：ComfyUI 沒有回應"
 
     except requests.exceptions.RequestException as e:
-        return None, f"主模型錯誤：{e}"
+        return None, f"請求錯誤：{e}"
 
     except Exception as e:
-        return None, f"影像處理失敗：{e}"
+        return None, f"圖像處理錯誤：{e}"
