@@ -44,7 +44,6 @@ def add_signature(image: Image.Image, text: str) -> Image.Image:
     except IOError:
         font = ImageFont.load_default()
 
-    # ✅ 用 textbbox 取代已棄用的 textsize
     bbox = draw.textbbox((0, 0), text, font=font)
     text_width = bbox[2] - bbox[0]
     text_height = bbox[3] - bbox[1]
