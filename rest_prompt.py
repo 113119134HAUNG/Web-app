@@ -14,7 +14,7 @@ from config import (
     NEGATIVE_PROMPT, CACHE_DIR
 )
 
-COMFY_API_URL = "http://localhost:8188"
+COMFY_API_URL = "http://localhost:8501"
 
 app = FastAPI()
 
