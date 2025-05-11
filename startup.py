@@ -67,4 +67,4 @@ if wait_for_port(7860, timeout=40):
         print("\u26a0\ufe0f 無法取得 cloudflared URL, 請手動查看 tunnel.log")
         print("\u932f誤：", str(e))
 else:
-    print("❌ Gradio 啟動連續失敗, cloudflared 未啟動")
+    print("Gradio 啟動連續失敗, cloudflared 未啟動")
