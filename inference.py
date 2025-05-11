@@ -18,12 +18,10 @@ from logger import log_prompt
 pipe = StableDiffusionPipeline.from_pretrained(
     MODEL_NAME,
     torch_dtype=torch.float16,
-    revision="fp16",
     safety_checker=None
 ).to("cuda")
 
 # fallback 模型延遲載入
-fallback_pipe = None
 def get_fallback_pipe():
     global fallback_pipe
     if fallback_pipe is None:
