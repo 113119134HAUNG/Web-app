@@ -7,21 +7,136 @@ log_path: prompt_log.csv
 default_width: 768
 default_height: 768
 prompt_presets:
-  人物: Ultra-realistic cinematic portrait of a beautiful woman, sharp focus, dramatic
-    and moody lighting, detailed facial features, studio photography, 85mm lens, shallow
-    depth of field, soft skin texture, natural makeup, elegant attire, by Annie Leibovitz,
-    high-resolution, 8k, award-winning photography
-  風景: Epic panoramic fantasy landscape, breathtaking scenery with majestic mountains,
-    serene lake, lush forests, volumetric sunlight, ultra-detailed, vivid colors,
-    atmospheric perspective, dramatic clouds, golden hour lighting, masterpiece, by
-    Albert Bierstadt and Greg Rutkowski, digital painting, 8k resolution
-  動漫: Highly detailed anime illustration of a girl standing in a field of cherry blossoms,
-    dynamic composition, soft pastel color palette, flowing hair, expressive eyes,
-    delicate petals in the air, gentle sunlight, cinematic depth of field, inspired
-    by Makoto Shinkai and Studio Ghibli, masterpiece, 4k, trending on Pixiv
-negative_prompt: low quality, blurry, out of focus, pixelated, grainy, noisy, watermark,
-  text, signature, logo, border, frame, bad anatomy, distorted anatomy, malformed
-  limbs, missing limbs, extra limbs, extra fingers, fused fingers, bad proportions,
-  unnatural pose, deformed face, mutated hands, poorly drawn hands, poorly drawn face,
-  oversaturated, underexposed, overexposed, monochrome, grayscale, duplicate, cropped,
-  jpeg artifacts, compression artifacts, cartoon, 3d render, painting, sketch, drawing
+  Portrait:
+    Ultra-realistic cinematic portrait of a beautiful woman,
+    sharp focus using Zeiss Otus lens,
+    dramatic chiaroscuro lighting with perfect Rembrandt triangle,
+    intricate detailed facial features showing skin texture pores and fine hairs,
+    professional studio photography with controlled environment, 85mm lens at f/1.4 aperture,
+    artistically precise shallow depth of field,
+    silky smooth skin texture with natural imperfections,
+    subtle professional makeup enhancing features,
+    haute couture elegant attire with fabric texture details,
+    masterful color grading with rich midtones,
+    organic film grain at 35mm quality, golden ratio composition,
+    collaborative masterpiece by Annie Leibovitz,
+    Peter Lindbergh and Richard Avedon,
+    16K resolution, museum-exhibited award-winning photography,
+    captured with Phase One medium format camera,
+    perfect facial symmetry with ideal proportion,
+    gallery lighting, archival print quality
+
+  Landscape:
+    Epic panoramic fantasy landscape at magic hour,
+    breathtaking hyper-detailed scenery with colossal snow-capped mountains,
+    crystal-clear serene lake perfectly reflecting the prismatic sky,
+    ancient lush forests with individually rendered leaves and foliage,
+    volumetric god rays sunlight breaking through stratified clouds,
+    photorealistic environment textures, vivid supersaturated complementary colors,
+    masterful atmospheric perspective with graduated misty valleys,
+    dramatic cumulonimbus cloud formations, golden hour lighting casting long defined shadows,
+    intricate geological textures with visible strata, artistic masterpiece, collaborative style of Albert Bierstadt,
+    Thomas Cole, Greg Rutkowski and Ivan Aivazovsky, digital oil painting technique,
+    16K resolution with microscopic details, cinematic 21:9 aspect ratio, perfect HDR rendering with 16-bit color depth,
+    exhibition quality
+
+ Anime:
+    Ultra-detailed professional anime illustration of a beautiful girl standing in a vast field of meticulously rendered cherry blossoms,
+    perfect dynamic composition following golden spiral ratio, delicate pastel color palette with carefully balanced pink and cyan accents,
+    physically accurate flowing hair with thousands of individual strands catching light,
+    hyper-expressive large eyes with multiple light reflections and depth,
+    hundreds of delicate sakura petals dancing in choreographed air currents,
+    realistic gentle dappled sunlight filtering through precisely placed branches,
+    cinema-quality depth of field with professional bokeh effect, pristine crisp linework with variable thickness,
+    expert cell-shaded style with subtle gradient shading, collaborative masterpiece inspired by Makoto Shinkai, Studio Ghibli,
+    Miyazaki and Kyoto Animation, museum quality artwork, 8K resolution with perfect anti-aliasing,
+    currently trending #1 on Pixiv rankings, perfect studio lighting setup with complementary rim lighting
+
+ Sci-Fi:
+    Hyper-detailed futuristic megacity at night, massive interconnected crystalline skyscrapers reaching stratospheric heights,
+    advanced cybernetic infrastructure enhancements on neo-brutalist architecture,
+    carefully placed glowing blue and purple neon lights outlining geometric structures,
+    ultra-detailed futuristic military-grade exoskeleton armor on mysterious silhouetted figure in dramatic foreground,
+    atmospheric volumetric fog with particulate simulation, antigravity hovering vehicles with photorealistic light trails and propulsion effects,
+    precise Blade Runner and Deus Ex inspired aesthetic, ray-traced holographic advertisements projected on building facades with accurate light dispersion,
+    physically accurate glossy rain-slicked streets creating perfect mirror reflections, cinematic IMAX widescreen composition with leading lines,
+    professional concept art worthy of production design award, advanced ray-traced global illumination lighting,
+    volumetric atmospheric perspective with distance haze, artwork by Syd Mead and Stephan Martiniere
+
+Cyberpunk:
+    Photorealistic cyberpunk street scene in detailed Neo-Tokyo district,
+    beautiful female android with illuminated synthetic eyes and intricately visible circuitry beneath translucent skin,
+    heavy persistent rain environment creating deep reflective puddles,
+    densely packed neon-lit narrow alleyway with animated Japanese kanji holographic signs,
+    technical dramatic rim lighting highlighting character silhouettes against dark backdrop,
+    immense towering megacorporation arcology city background with thousands of individual lights forming patterns,
+    physically accurate highly reflective wet carbon-fiber and chrome surfaces,
+    dense atmospheric volumetric smoke and precisely colored fog with light scattering,
+    microscopic mechanical and technological details on all surfaces, 8K ultra HD quality with perfect sharpness,
+    technical high contrast ratio with controlled lighting, carefully selected vibrant color palette with complementary hues,
+    directly inspired by Ghost in the Shell, Blade Runner 2049 and Cyberpunk 2077,
+    photorealistic hyperdetailed rendering with global illumination
+Fantasy Character:
+    Heroic fantasy character portrait, legendary elven archer with ancient ornate armor,
+    intricate facial features showing centuries of wisdom, masterfully crafted recurve bow with magical runes,
+    enchanted forest background with bioluminescent elements, ethereal magical particles surrounding figure,
+    detailed leather and metal texturework, fantasy jewelry with gemstone details, dynamic pose suggesting imminent action,
+    perfect anatomical proportions, dramatic fantasy lighting with multiple light sources, rich color palette with emerald and gold accents,
+    ultra-detailed equipment showing wear and craftsmanship, professional character concept art,
+    inspired by Donato Giancola and Todd Lockwood, perfect composition with artistic focus, 8K resolution,
+    studio quality rendering, award-winning digital painting, portfolio centerpiece quality
+Wildlife:
+    Breathtaking ultra-detailed wildlife photography of majestic tiger in natural habitat, perfect freezing of dynamic motion,
+    morning golden light filtering through jungle canopy, razor-sharp focus on piercing eyes with catchlights,
+    individual fur strands visible with perfect definition, natural environment with photorealistic foliage,
+    professional wildlife photography techniques, powerful muscular anatomy captured with perfect timing,
+    micro-droplets of morning dew visible, Canon EOS R5 with 600mm telephoto lens, National Geographic quality,
+    atmospheric jungle mist creating depth, perfect exposure settings capturing full dynamic range, true-to-life color accuracy,
+    award-winning nature photography by Art Wolfe and Frans Lanting, precise behavioral moment captured, museum exhibition quality,
+    8K resolution, cinematic color grading
+Dark Fantasy:
+    Hauntingly beautiful dark fantasy scene, ancient crumbling gothic cathedral consumed by supernatural corruption,
+    towering twisted architecture with impossible geometries, malevolent entity partially obscured in shadows with only glowing eyes visible,
+    decaying ornate details with grotesque gargoyles, moonlight streaming through shattered stained glass creating prismatic lighting effects,
+    scattered ritual candles with realistic flame simulation, ultra-detailed macabre environment with bones and forgotten relics,
+    volumetric fog creeping along stone floor, dark color palette with strategic crimson accents,
+    dramatic chiaroscuro lighting creating psychological tension, inspired by Zdzisław Beksiński and H.R. Giger, professional concept art quality,
+    photorealistic rendering with perfect perspective, 8K resolution with microscopic textures, cinematic horror composition,
+    gallery-worthy digital painting
+Abstract:
+    Stunning abstract digital artwork, fluid dynamic shapes with perfect mathematical harmony,
+    vibrant complementary color scheme with professional color theory application,
+    intricate fractal patterns emerging from chaos, multiple layers of transparency and depth,
+    perfect balance between order and randomness, microscopic details revealing new patterns when examined closely,
+    subtle sacred geometry principles incorporated throughout, perfect compositional flow guiding the eye,
+    emotional evocation through color psychology, inspired by pioneering digital artists and generative art techniques, exhibition quality with pristine rendering,
+    8K resolution with perfect anti-aliasing, sophisticated artistic statement, gallery presentation quality,
+    award-winning abstract design, perfect technical execution with artistic soul, harmonious visual symphony
+Steampunk:
+    Elaborate steampunk mechanical laboratory, Victorian-era scientist with brass goggles and intricate period-accurate clothing,
+    massive Tesla-inspired electrical apparatus with arcing electricity between copper coils,
+    fully-functional brass and copper machinery with visible gears and mechanical operations,
+    richly detailed mahogany and leather furnishings, swirling steam with accurate physics simulation,
+    warm ambient lighting from gas lamps with realistic flame effects, walls lined with technical diagrams and patents in authentic period style,
+    photorealistic textures on all materials showing appropriate wear and patina, historically accurate architectural details with modern fantastical elements,
+    rich color palette of browns, golds and deep reds, atmospheric dust particles visible in light beams, inspired by Jules Verne and H.G. Wells aesthetic,
+    professional concept art quality, 8K resolution with perfect period details, museum exhibition quality illustration
+Underwater:
+    Breathtaking underwater photography of vibrant coral reef ecosystem, crystal clear turquoise water with realistic caustic light effects,
+    diverse coral formations with scientific accuracy and thousands of individual polyps, schools of tropical fish with iridescent scales and perfect anatomy,
+    streaming sunlight creating volumetric god rays through water, subtle underwater particulate matter creating depth,
+    natural blue gradient of water depth, perfect exposure settings capturing underwater colors accurately,
+    extreme macro details of marine life showing textures invisible to naked eye, professional underwater lighting techniques,
+    shot with specialized underwater housing for Canon 5D Mark IV, 16-35mm wide angle lens with perfect rectilinear correction,
+    award-winning nature photography quality, National Geographic documentary level realism, perfect composition balancing foreground interest with background environment,
+    8K resolution with tack-sharp details throughout
+negative_prompt: (worst quality:1.2), (low quality:1.2), (normal quality:1.2), (lowres:1.1), (low resolution:1.1), blurry, out of focus, depth of field, bokeh,
+    pixelated, jpeg artifacts, compression artifacts, grainy, noisy, film grain, underexposed, overexposed, blown highlights, crushed blacks, over-saturation, over-sharpened,
+    chromatic aberration, lens flare, lens distortion, vignette, watermark, text, caption, signature, artist name, logo, copyright symbol, branding, border, frame, padding, cropped image,
+    duplicate elements, repeating elements, multiple versions, bad anatomy, deformed anatomy, distorted anatomy, disfigured, malformed limbs, missing limbs, floating limbs, disconnected limbs,
+    extra limbs, mutated hands, mutilated, poorly drawn hands, poorly drawn face, poorly drawn feet, missing fingers, extra fingers, fused fingers, too many fingers, long neck, cross-eyed,
+    crossed eyes, misaligned eyes, asymmetric eyes, heterochromia, deformed iris, blurry iris, bad proportions, unnatural pose, deformed, mutated, twisted body, contorted pose, anatomical nonsense,
+    anatomically incorrect, unrealistic proportions, disproportionate body, elongated body parts, incorrect scale, cartoon, 3d render, 3d model, CGI, computer generated, digital art, painting, sketch,
+    drawing, anime, manga sketch, cartoon character, illustrated, cell-shaded, line art, flat shading, clip art, artificial, amateur, amateurish, beginner art, hobby art, unprofessional, sloppy, messy,
+    scribble, childish, AI-generated, old, outdated, strange colors, unrealistic lighting, poor composition, unrefined, simplistic, stock image, monochrome, grayscale, black and white, sepia, duotone, gaussian blur,
+    motion blur, unfocused, soft focus, haze, fog filter, glitch, corrupted image, visual artifacts, rendering errors, aliasing, moire patterns, posterization
