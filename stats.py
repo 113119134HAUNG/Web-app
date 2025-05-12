@@ -7,24 +7,30 @@ import matplotlib
 from config import PROMPT_LOG_PATH
 
 matplotlib.rcParams['font.family'] = [
-    'Noto Sans CJK TC', 'Taipei Sans TC Beta', 'Microsoft JhengHei', 'PingFang TC', 'Arial', 'DejaVu Sans'
+    'Noto Sans CJK TC', 'Taipei Sans TC Beta', 'Microsoft JhengHei',
+    'PingFang TC', 'Arial', 'DejaVu Sans'
 ]
 
 COL_TIME = "time"
 COL_PROMPT = "prompt"
 COL_STYLE = "style"
+COL_MODEL = "model"
+
 
 def load_log_df():
+    """載入 prompt 日誌資料為 DataFrame"""
     if not os.path.exists(PROMPT_LOG_PATH):
-        return pd.DataFrame(columns=[COL_TIME, COL_PROMPT, COL_STYLE])
+        return pd.DataFrame(columns=[COL_TIME, COL_PROMPT, COL_STYLE, COL_MODEL])
     try:
-        df = pd.read_csv(PROMPT_LOG_PATH, names=[COL_TIME, COL_PROMPT, COL_STYLE])
+        df = pd.read_csv(PROMPT_LOG_PATH, names=[COL_TIME, COL_PROMPT, COL_STYLE, COL_MODEL])
         return df
     except Exception as e:
-        print(f"❌ 無法讀取紀錄檔: {e}")
-        return pd.DataFrame(columns=[COL_TIME, COL_PROMPT, COL_STYLE])
+        print(f"無法讀取日誌檔案：{e}")
+        return pd.DataFrame(columns=[COL_TIME, COL_PROMPT, COL_STYLE, COL_MODEL])
 
-def plot_prompt_usage(df):
+
+def plot_prompt_usage(df: pd.DataFrame):
+    """產生最常使用的風格統計圖"""
     try:
         if df.empty or COL_STYLE not in df:
             raise ValueError("缺少風格資料")
@@ -37,13 +43,15 @@ def plot_prompt_usage(df):
         plt.tight_layout()
         return fig
     except Exception as e:
-        print(f"❌ 繪製風格統計失敗: {e}")
-        return error_figure(str(e))
+        print(f"繪製風格統計失敗：{e}")
+        return error_figure(f"風格統計錯誤：{e}")
 
-def plot_time_distribution(df):
+
+def plot_time_distribution(df: pd.DataFrame):
+    """產生一天中使用高峰時段分佈圖"""
     try:
         if df.empty or COL_TIME not in df:
-            raise ValueError("缺少時間資料")
+            raise ValueError("缺少時間欄位")
         df[COL_TIME] = pd.to_datetime(df[COL_TIME], errors="coerce")
         df = df.dropna(subset=[COL_TIME])
         if df.empty:
@@ -58,16 +66,21 @@ def plot_time_distribution(df):
         plt.tight_layout()
         return fig
     except Exception as e:
-        print(f"❌ 繪製時間分佈失敗: {e}")
-        return error_figure(str(e))
+        print(f"繪製時間分佈失敗：{e}")
+        return error_figure(f"時間分佈錯誤：{e}")
+
 
 def error_figure(msg: str):
+    """回傳錯誤訊息用的圖表畫面"""
     fig, ax = plt.subplots()
-    ax.text(0.5, 0.5, f"錯誤：{msg}", fontsize=12, ha='center', va='center', color='red')
+    ax.text(0.5, 0.5, msg, fontsize=12, ha='center', va='center', color='red')
     ax.axis('off')
     return fig
+
 
 if __name__ == "__main__":
     df = load_log_df()
     fig1 = plot_prompt_usage(df)
     fig2 = plot_time_distribution(df)
+    fig1.show()
+    fig2.show()
