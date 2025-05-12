@@ -3,10 +3,10 @@
 import subprocess
 import threading
 import time
-import re
 from pathlib import Path
+from cloudflared_wait import wait_for_cloudflared_log
 
-# 路徑設定
+# 路徑設定（統一放在 /content/Web-app）
 ROOT_DIR = Path("/content/Web-app")
 CLOUDFLARED_BIN = ROOT_DIR / "cloudflared"
 TUNNEL_LOG = ROOT_DIR / "tunnel.log"
@@ -22,24 +22,6 @@ def download_cloudflared_if_needed():
     subprocess.run(["chmod", "+x", str(CLOUDFLARED_BIN)], check=True)
     print("cloudflared 已下載並設為可執行")
 
-def wait_for_url_from_log(timeout=60) -> str | None:
-    """從 tunnel.log 監聽網址並寫入 comfy_url.txt"""
-    for _ in range(timeout):
-        if TUNNEL_LOG.exists():
-            try:
-                text = TUNNEL_LOG.read_text(encoding="utf-8", errors="ignore")
-                match = re.findall(r"https://[^\s]+?\.trycloudflare\.com", text)
-                if match:
-                    url = match[-1]
-                    URL_OUTPUT.write_text(url, encoding="utf-8")
-                    print(f"公開網址已取得：{url}")
-                    return url
-            except Exception as e:
-                print(f"無法讀取 tunnel.log：{e}")
-        time.sleep(1)
-    print("未能取得 cloudflared 公開網址")
-    return None
-
 def launch_cloudflared_background(port: int = 7860):
     """啟動 cloudflared 並背景監聽網址"""
     def _run():
@@ -52,9 +34,14 @@ def launch_cloudflared_background(port: int = 7860):
                 stdout=TUNNEL_LOG.open("w"),
                 stderr=subprocess.STDOUT
             )
-            wait_for_url_from_log()
+            wait_for_cloudflared_log(
+                log_path=str(TUNNEL_LOG),
+                output_path=str(URL_OUTPUT),
+                max_wait_seconds=60
+            )
         except Exception as e:
             print(f"cloudflared 啟動錯誤：{e}")
+
     threading.Thread(target=_run, daemon=True).start()
 
 def get_current_url(default="http://127.0.0.1:8188") -> str:
@@ -66,7 +53,7 @@ def get_current_url(default="http://127.0.0.1:8188") -> str:
             pass
     return default
 
-# CLI 測試支援
+# ✅ CLI 測試支援
 if __name__ == "__main__":
     launch_cloudflared_background(port=7860)
     print("正在背景啟動 cloudflared...")
