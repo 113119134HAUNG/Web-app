@@ -42,7 +42,7 @@ print("等待 Gradio 啟動...")
 
 # 啟動 cloudflared
 subprocess.Popen(
-    ["./cloudflared", "tunnel", "--url", "http://localhost:7860"],
+    ["./cloudflared", "tunnel", "--url", "http://127.0.0.1:7860"],
     cwd="/content/Web-app",
     stdout=open("/content/Web-app/tunnel.log", "w"),
     stderr=subprocess.STDOUT)
