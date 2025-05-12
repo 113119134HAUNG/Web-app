@@ -63,6 +63,7 @@ def launch_cloudflared_background(port: int = 7860):
         try:
             download_cloudflared_if_needed()
             print(f"啟動 cloudflared：連接至 http://localhost:{port}")
+            subprocess.run(["chmod", "+x", str(CLOUDFLARED_BIN)], check=True)
             subprocess.Popen(
                 [f"./{CLOUDFLARED_BIN.name}", "tunnel", "--url", f"http://localhost:{port}"],
                 cwd=ROOT_DIR,
