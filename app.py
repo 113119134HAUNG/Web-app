@@ -119,8 +119,8 @@ def main():
                 """)
 
     demo.queue()
+    threading.Thread(target=wait_for_cloudflared_url, daemon=True).start()
     demo.launch(server_name="0.0.0.0", server_port=7860, show_api=False, share=True)
     print("Gradio 已啟動，7860 埠監聽中")
-    write_url_to_file(share_url)
 if __name__ == "__main__":
     main()
