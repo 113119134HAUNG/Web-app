@@ -40,5 +40,13 @@ wait_for_port(8501)
 subprocess.Popen(["python", "app.py"])
 print("等待 Gradio 啟動...")
 
-# 啟動 Cloudflared 穿透
-launch_cloudflared_background(port=7860)
+# 啟動 cloudflared
+subprocess.Popen(
+    ["./cloudflared", "tunnel", "--url", "http://localhost:7860"],
+    cwd="/content/Web-app",
+    stdout=open("/content/Web-app/tunnel.log", "w"),
+    stderr=subprocess.STDOUT)
+
+# 解析公開網址
+from cloudflared_runner import wait_for_cloudflared_url
+wait_for_cloudflared_url()
