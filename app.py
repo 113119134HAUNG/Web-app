@@ -10,9 +10,8 @@ torchvision.disable_beta_transforms_warning()
 from config import PROMPT_PRESETS
 from inference import generate_image
 from cache_utils import clear_old_cache
-from cloudflared_runner import write_url_to_file
+from cloudflared_runner import wait_for_cloudflared_url
 from stats import load_log_df, plot_prompt_usage, plot_time_distribution
-launch_cloudflared_background(port=7860)
 
 
 clear_old_cache(days=7)
