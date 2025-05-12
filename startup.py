@@ -5,6 +5,7 @@ import time
 import socket
 import subprocess
 import threading
+from pathlib import Path
 from IPython.display import display, Markdown
 from cloudflared_wait import wait_for_cloudflared_log
 
@@ -18,9 +19,6 @@ def wait_for_port(port, host="127.0.0.1", timeout=60, rest_after_ready=2):
         except OSError:
             time.sleep(1)
     return False
-
-def run_shell(cmd: str):
-    subprocess.run(cmd, shell=True, check=True)
 
 # 清除残留進程
 os.system("pkill -f 'python main.py' || true")
@@ -49,14 +47,13 @@ wait_for_port(8501)
 
 # 啟動 Gradio Web App
 subprocess.Popen(["python", "app.py"])
-print("\u7b49\u5f85 Gradio 啟動...")
+print("等待 Gradio 啟動...")
 
 def launch_cloudflared_when_ready():
     if wait_for_port(7860, timeout=60):
         print("Gradio 已啟動, 開始 cloudflared 穿透...")
-        if not os.path.exists("cloudflared"):
-            run_shell("wget -O cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64")
-            run_shell("chmod +x cloudflared")
+        if not Path("cloudflared").exists():
+            raise FileNotFoundError("❌ 找不到 cloudflared，請先在 Colab 初始化區塊下載並授權")
         subprocess.Popen(
             ["./cloudflared", "tunnel", "--url", "http://localhost:7860"],
             stdout=open("tunnel.log", "w"),
@@ -68,7 +65,7 @@ def launch_cloudflared_when_ready():
             print(f"\nWeb App 已啟動，請開啟：{url}")
             display(Markdown(f"### 點此開啟 Web UI：[**Gradio 入口**]({url})"))
         except Exception as e:
-            print("\u26a0\ufe0f 無法取得 cloudflared URL，請手動查看 tunnel.log")
+            print("無法取得 cloudflared URL，請手動查看 tunnel.log")
             print("Error:", str(e))
     else:
         print("Gradio 啟動連續失敗, cloudflared 未啟動")
