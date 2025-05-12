@@ -41,4 +41,4 @@ subprocess.Popen(["python", "app.py"])
 print("等待 Gradio 啟動...")
 
 # 解析公開網址
-wait_for_cloudflared_url()
+# wait_for_cloudflared_url()
