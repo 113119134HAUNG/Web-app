@@ -13,7 +13,7 @@ from cache_utils import get_hash, get_cache_path
 from logger import log_prompt
 from comfy_client import generate_with_comfyui
 
-# 預載入 SD1.5 模型（作為主模型）
+# 預載入 SD1.5 模型（作為備援模型）
 fallback_pipe = StableDiffusionPipeline.from_pretrained(
     FALLBACK_MODEL_NAME,
     torch_dtype=torch.float16,
@@ -47,6 +47,8 @@ def generate_image(prompt: str, style: str, width: int, height: int, seed: int, 
             image = Image.open(cache_path).convert("RGB")
             source = "(from cache)"
         else:
+            image, source = None, ""
+
             if model == "SD3 (ComfyUI)":
                 image, source = generate_with_comfyui(full_prompt, width, height, seed)
                 if image is None:
@@ -54,23 +56,29 @@ def generate_image(prompt: str, style: str, width: int, height: int, seed: int, 
                     model = "SD1.5"
 
             if model == "SD1.5":
-                output = fallback_pipe(
-                    prompt=full_prompt,
-                    negative_prompt=NEGATIVE_PROMPT,
-                    width=width,
-                    height=height,
-                    generator=generator
-                )
-                image = output.images[0]
-                source = "(Fallback SD1.5)"
+                try:
+                    output = fallback_pipe(
+                        prompt=full_prompt,
+                        negative_prompt=NEGATIVE_PROMPT,
+                        width=width,
+                        height=height,
+                        generator=generator
+                    )
+                    image = output.images[0]
+                    source = "(Fallback SD1.5)"
+                except Exception as e:
+                    return None, f"[Error] SD1.5 生成失敗: {e}"
 
-            image.save(cache_path)
+            if image:
+                image.save(cache_path)
 
-        image = add_signature(image, f"ID:{img_hash[:8]}")
-        log_prompt(full_prompt, style)
-
-        elapsed = round(time.time() - start_time, 2)
-        return image, f"{source} - {elapsed}s"
+        if image:
+            image = add_signature(image, f"ID:{img_hash[:8]}")
+            log_prompt(full_prompt, style)
+            elapsed = round(time.time() - start_time, 2)
+            return image, f"{source} - {elapsed}s"
+        else:
+            return None, "[Error] 無法生成圖像"
 
     except Exception as e:
         return None, f"[Error] 生成失敗: {e}"
@@ -81,10 +89,9 @@ import gradio as gr
 from inference import generate_image
 from config import DEFAULT_WIDTH, DEFAULT_HEIGHT
 
-def ui_infer(prompt, model):
+def ui_infer(prompt, model, width, height, seed):
     style = "default"
-    width, height, seed = DEFAULT_WIDTH, DEFAULT_HEIGHT, 42
-    return generate_image(prompt, style, width, height, seed, model)
+    return generate_image(prompt, style, int(width), int(height), int(seed), model)
 
 with gr.Blocks() as demo:
     gr.Markdown("## Stable Diffusion App【SD1.5 / SD3 via ComfyUI】")
@@ -93,15 +100,20 @@ with gr.Blocks() as demo:
         model_choice = gr.Radio(["SD1.5", "SD3 (ComfyUI)"], label="選擇模型", value="SD1.5")
 
     prompt_input = gr.Textbox(label="Prompt")
+    width_slider = gr.Slider(512, 1024, value=DEFAULT_WIDTH, step=64, label="寬度 (px)")
+    height_slider = gr.Slider(512, 1024, value=DEFAULT_HEIGHT, step=64, label="高度 (px)")
+    seed_input = gr.Number(label="Seed", value=42, precision=0)
     generate_btn = gr.Button("開始生成")
+
     image_output = gr.Image(label="輸出圖像")
     status_output = gr.Textbox(label="狀態訊息")
 
     generate_btn.click(
         fn=ui_infer,
-        inputs=[prompt_input, model_choice],
+        inputs=[prompt_input, model_choice, width_slider, height_slider, seed_input],
         outputs=[image_output, status_output]
     )
 
 if __name__ == "__main__":
-    demo.launch(server_name="127.0.0.1", server_port=7860, share=True)
+    demo.launch(server_name="127.0.0.1", server_port=7860, share=False)
+    print("Gradio 已啟動，7860 埠監聽中")
