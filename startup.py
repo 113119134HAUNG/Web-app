@@ -49,11 +49,14 @@ wait_for_port(8501)
 subprocess.Popen(["python", "app.py"])
 print("等待 Gradio 啟動...")
 
+# 儲存網址路徑
+url_output_path = Path("/content/Web-app/comfy_url.txt")
+
 def launch_cloudflared_when_ready():
     if wait_for_port(7860, timeout=60):
         print("Gradio 已啟動, 開始 cloudflared 穿透...")
         if not Path("cloudflared").exists():
-            raise FileNotFoundError("❌ 找不到 cloudflared，請先在 Colab 初始化區塊下載並授權")
+            raise FileNotFoundError("找不到 cloudflared，請先在 Colab 初始化區塊下載並授權")
         subprocess.Popen(
             ["./cloudflared", "tunnel", "--url", "http://localhost:7860"],
             stdout=open("tunnel.log", "w"),
@@ -61,11 +64,14 @@ def launch_cloudflared_when_ready():
         )
         time.sleep(6)
         try:
-            url = wait_for_cloudflared_log()
-            print(f"\nWeb App 已啟動，請開啟：{url}")
-            display(Markdown(f"### 點此開啟 Web UI：[**Gradio 入口**]({url})"))
+            url = wait_for_cloudflared_log(output_path=str(url_output_path))
+            if url:
+                print(f"\nWeb App 外部網址已建立：{url}")
+                display(Markdown(f"### 點此開啟 Web UI：[**Gradio 入口**]({url})"))
+            else:
+                print("⚠️ 無法從 cloudflared 日誌中讀取網址")
         except Exception as e:
-            print("無法取得 cloudflared URL，請手動查看 tunnel.log")
+            print("cloudflared URL 擷取失敗，請手動查看 tunnel.log")
             print("Error:", str(e))
     else:
         print("Gradio 啟動連續失敗, cloudflared 未啟動")
