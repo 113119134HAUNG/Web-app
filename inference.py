@@ -74,7 +74,7 @@ def generate_image(prompt: str, style: str, width: int, height: int, seed: int, 
 
         if image:
             image = add_signature(image, f"ID:{img_hash[:8]}")
-            log_prompt(full_prompt, style)
+            log_prompt(full_prompt, style, model)
             elapsed = round(time.time() - start_time, 2)
             return image, f"{source} - {elapsed}s"
         else:
