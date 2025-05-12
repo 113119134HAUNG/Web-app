@@ -42,7 +42,7 @@ async def generate_image(request: Request):
         seed = int(data.get("seed", 42))
 
         if not prompt:
-            return {"error": "❌ 請提供有效的 prompt 內容"}
+            return {"error": "請提供有效的 prompt 內容"}
 
         print(f"[請求] Prompt: {prompt} | Size: {width}x{height} | Seed: {seed}")
 
@@ -58,14 +58,14 @@ async def generate_image(request: Request):
         # 呼叫 ComfyUI REST API
         res = requests.post(f"{COMFY_API_URL}/prompt", json=payload)
         if res.status_code != 200:
-            return {"error": f"❌ ComfyUI 連線失敗 ({res.status_code})"}
+            return {"error": f"ComfyUI 連線失敗 ({res.status_code})"}
 
         image_bytes = io.BytesIO(res.content)
         return Response(content=image_bytes.read(), media_type="image/png")
 
     except Exception as e:
         print(f"[錯誤] {e}")
-        return {"error": f"❌ 伺服器錯誤: {str(e)}"}
+        return {"error": f"伺服器錯誤: {str(e)}"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8501)
