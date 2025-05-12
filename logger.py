@@ -11,20 +11,24 @@ log_path.parent.mkdir(parents=True, exist_ok=True)
 logger = logging.getLogger("prompt_logger")
 logger.setLevel(logging.INFO)
 
-handler = RotatingFileHandler(
-    filename=log_path,
-    maxBytes=5 * 1024 * 1024,
-    backupCount=3,
-    encoding="utf-8"
-)
-
-formatter = logging.Formatter('%(asctime)s,%(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-handler.setFormatter(formatter)
-
+# 避免重複加 handler
 if not logger.handlers:
+    handler = RotatingFileHandler(
+        filename=log_path,
+        maxBytes=5 * 1024 * 1024,
+        backupCount=3,
+        encoding="utf-8"
+    )
+    formatter = logging.Formatter('%(asctime)s,%(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    handler.setFormatter(formatter)
     logger.addHandler(handler)
 
-def log_prompt(prompt: str, style: str) -> None:
+    # 額外印出到 stdout（可選）
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(stream_handler)
+
+def log_prompt(prompt: str, style: str, model: str) -> None:
     try:
         clean_prompt = prompt.replace('\n', ' ').replace('\r', ' ').strip()
         clean_style = style.replace('\n', ' ').replace('\r', ' ').strip()
