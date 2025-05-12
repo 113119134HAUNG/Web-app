@@ -119,7 +119,7 @@ def main():
                 """)
 
     demo.queue()
-    demo.launch(server_name="0.0.0.0", server_port=7860, show_api=False)
+    demo.launch(server_name="0.0.0.0", server_port=7860, show_api=False, share=False)
 
 if __name__ == "__main__":
     main()
