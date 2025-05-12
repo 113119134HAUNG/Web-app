@@ -10,7 +10,7 @@ torchvision.disable_beta_transforms_warning()
 from config import PROMPT_PRESETS
 from inference import generate_image
 from cache_utils import clear_old_cache
-from cloudflared_runner import launch_cloudflared_background
+from cloudflared_runner import write_url_to_file
 from stats import load_log_df, plot_prompt_usage, plot_time_distribution
 launch_cloudflared_background(port=7860)
 
@@ -124,6 +124,6 @@ def main():
     demo.queue()
     demo.launch(server_name="0.0.0.0", server_port=7860, show_api=False, share=True)
     print("Gradio 已啟動，7860 埠監聽中")
-    
+    write_url_to_file(share_url)
 if __name__ == "__main__":
     main()
