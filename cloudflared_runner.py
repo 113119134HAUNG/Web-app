@@ -8,8 +8,7 @@ from pathlib import Path
 ROOT_DIR = Path("/content/Web-app")
 TUNNEL_LOG = ROOT_DIR / "tunnel.log"
 URL_OUTPUT = ROOT_DIR / "comfy_url.txt"
-
-def wait_for_cloudflared_url(log_path: Path = TUNNEL_LOG,
+'''def wait_for_cloudflared_url(log_path: Path = TUNNEL_LOG,
                              output_path: Path = URL_OUTPUT,
                              max_wait_seconds: int = 60) -> str | None:
     
@@ -35,7 +34,7 @@ def wait_for_cloudflared_url(log_path: Path = TUNNEL_LOG,
             break
 
     print("⚠️ 未能取得公開網址，請確認 cloudflared 是否已正常啟動")
-    return None
+    return None'''
 
 
 def get_current_url(default: str = "http://127.0.0.1:8188") -> str:
