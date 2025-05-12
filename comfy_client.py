@@ -42,7 +42,7 @@ def generate_with_comfyui(prompt: str, width: int = 512, height: int = 512, seed
         response = requests.post(f"{comfy_api_url}/prompt", json=payload, timeout=30)
         response.raise_for_status()
         image = Image.open(BytesIO(response.content)).convert("RGB")
-        return image, f"成功連線 ComfyUI 模型\n📡 API：{comfy_api_url}"
+        return image, f"成功連線 ComfyUI 模型\n API：{comfy_api_url}"
 
     except requests.exceptions.Timeout:
         return None, f"逾時：ComfyUI 未於 30 秒內回應 ({comfy_api_url})"
