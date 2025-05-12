@@ -122,7 +122,7 @@ def main():
                 """)
 
     demo.queue()
-    demo.launch(server_name="0.0.0.0", server_port=7860, show_api=False, share=False)
+    demo.launch(server_name="0.0.0.0", server_port=7860, show_api=False, share=True)
     print("Gradio 已啟動，7860 埠監聽中")
     
 if __name__ == "__main__":
