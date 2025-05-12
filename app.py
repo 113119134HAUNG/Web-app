@@ -1,17 +1,16 @@
 # app.py
 
+import os
 import gradio as gr
-import os, torchvision, threading
-os.makedirs("cache", exist_ok=True)
-torchvision.disable_beta_transforms_warning()
-
+import torchvision
 from config import PROMPT_PRESETS
 from inference import generate_image
 from cache_utils import clear_old_cache
-# from cloudflared_runner import wait_for_cloudflared_url
+from cloudflared_runner import write_url_to_file
 from stats import load_log_df, plot_prompt_usage, plot_time_distribution
 
-
+os.makedirs("cache", exist_ok=True)
+torchvision.disable_beta_transforms_warning()
 clear_old_cache(days=7)
 
 def update_stats():
@@ -118,14 +117,16 @@ def main():
                     </div>
                 """)
 
-    demo.queue()
-if __name__ == "__main__":
+    # ✅ 啟動 Gradio 並取得分享網址
     _, share_url = demo.launch(
         server_name="0.0.0.0",
         server_port=7860,
         show_api=False,
-        share=True)
-    
-    # 自動儲存網址
-    from cloudflared_runner import write_url_to_file
+        share=True
+    )
+
+    # ✅ 自動儲存網址
     write_url_to_file(share_url)
+
+if __name__ == "__main__":
+    main()
