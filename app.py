@@ -1,10 +1,8 @@
 # app.py
 
-import os
-os.makedirs("cache", exist_ok=True)
-
 import gradio as gr
-import torchvision
+import os, torchvision, threading
+os.makedirs("cache", exist_ok=True)
 torchvision.disable_beta_transforms_warning()
 
 from config import PROMPT_PRESETS
