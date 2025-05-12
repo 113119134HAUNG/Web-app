@@ -8,6 +8,7 @@ from pathlib import Path
 
 # 路徑設定（統一放在 /content/Web-app）
 ROOT_DIR = Path("/content/Web-app")
+ROOT_DIR.mkdir(parents=True, exist_ok=True)
 CLOUDFLARED_BIN = ROOT_DIR / "cloudflared"
 TUNNEL_LOG = ROOT_DIR / "tunnel.log"
 URL_OUTPUT = ROOT_DIR / "comfy_url.txt"
